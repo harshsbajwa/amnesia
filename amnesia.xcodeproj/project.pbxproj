@@ -11,29 +11,20 @@
 		667F6B712DD9F54900B2CEDE /* MLXLMCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 667F6B702DD9F54900B2CEDE /* MLXLMCommon */; };
 		667F6B732DD9F54F00B2CEDE /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = 667F6B722DD9F54F00B2CEDE /* MLXLLM */; };
 		667F6B752DD9F8A700B2CEDE /* MLXVLM in Frameworks */ = {isa = PBXBuildFile; productRef = 667F6B742DD9F8A700B2CEDE /* MLXVLM */; };
+		667F6BF72DDA3C1600B2CEDE /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667F6BF62DDA3C1600B2CEDE /* Vision.framework */; };
+		667F6BF92DDA3C2400B2CEDE /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667F6BF82DDA3C2400B2CEDE /* CoreGraphics.framework */; };
+		667F6BFB2DDA3C2E00B2CEDE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667F6BFA2DDA3C2E00B2CEDE /* AVFoundation.framework */; };
+		667F6BFD2DDA3C3900B2CEDE /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667F6BFC2DDA3C3900B2CEDE /* CoreData.framework */; };
+		66BF50632DDA47DE00575961 /* ScreenCaptureKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667F6BF42DDA3C0700B2CEDE /* ScreenCaptureKit.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		66E6F5C62DD8351F00CC69B7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 66E6F5AD2DD8351D00CC69B7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 66E6F5B42DD8351D00CC69B7;
-			remoteInfo = amnesia;
-		};
-		66E6F5D02DD8351F00CC69B7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 66E6F5AD2DD8351D00CC69B7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 66E6F5B42DD8351D00CC69B7;
-			remoteInfo = amnesia;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
+		667F6BF42DDA3C0700B2CEDE /* ScreenCaptureKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScreenCaptureKit.framework; path = System/Library/Frameworks/ScreenCaptureKit.framework; sourceTree = SDKROOT; };
+		667F6BF62DDA3C1600B2CEDE /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
+		667F6BF82DDA3C2400B2CEDE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		667F6BFA2DDA3C2E00B2CEDE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		667F6BFC2DDA3C3900B2CEDE /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		66E6F5B52DD8351D00CC69B7 /* amnesia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = amnesia.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		66E6F5C52DD8351F00CC69B7 /* amnesiaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = amnesiaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		66E6F5CF2DD8351F00CC69B7 /* amnesiaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = amnesiaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -49,6 +40,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66BF50632DDA47DE00575961 /* ScreenCaptureKit.framework in Frameworks */,
+				667F6BFD2DDA3C3900B2CEDE /* CoreData.framework in Frameworks */,
+				667F6BFB2DDA3C2E00B2CEDE /* AVFoundation.framework in Frameworks */,
+				667F6BF92DDA3C2400B2CEDE /* CoreGraphics.framework in Frameworks */,
+				667F6BF72DDA3C1600B2CEDE /* Vision.framework in Frameworks */,
 				667F6B732DD9F54F00B2CEDE /* MLXLLM in Frameworks */,
 				667F6B712DD9F54900B2CEDE /* MLXLMCommon in Frameworks */,
 				667F6B752DD9F8A700B2CEDE /* MLXVLM in Frameworks */,
@@ -56,27 +52,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		66E6F5C22DD8351F00CC69B7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		66E6F5CC2DD8351F00CC69B7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		667F6BF32DDA3C0600B2CEDE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				667F6BFC2DDA3C3900B2CEDE /* CoreData.framework */,
+				667F6BFA2DDA3C2E00B2CEDE /* AVFoundation.framework */,
+				667F6BF82DDA3C2400B2CEDE /* CoreGraphics.framework */,
+				667F6BF62DDA3C1600B2CEDE /* Vision.framework */,
+				667F6BF42DDA3C0700B2CEDE /* ScreenCaptureKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		66E6F5AC2DD8351D00CC69B7 = {
 			isa = PBXGroup;
 			children = (
 				66E6F5B72DD8351D00CC69B7 /* amnesia */,
+				667F6BF32DDA3C0600B2CEDE /* Frameworks */,
 				66E6F5B62DD8351D00CC69B7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,8 +80,6 @@
 			isa = PBXGroup;
 			children = (
 				66E6F5B52DD8351D00CC69B7 /* amnesia.app */,
-				66E6F5C52DD8351F00CC69B7 /* amnesiaTests.xctest */,
-				66E6F5CF2DD8351F00CC69B7 /* amnesiaUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -120,46 +113,6 @@
 			productReference = 66E6F5B52DD8351D00CC69B7 /* amnesia.app */;
 			productType = "com.apple.product-type.application";
 		};
-		66E6F5C42DD8351F00CC69B7 /* amnesiaTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 66E6F5DC2DD8351F00CC69B7 /* Build configuration list for PBXNativeTarget "amnesiaTests" */;
-			buildPhases = (
-				66E6F5C12DD8351F00CC69B7 /* Sources */,
-				66E6F5C22DD8351F00CC69B7 /* Frameworks */,
-				66E6F5C32DD8351F00CC69B7 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				66E6F5C72DD8351F00CC69B7 /* PBXTargetDependency */,
-			);
-			name = amnesiaTests;
-			packageProductDependencies = (
-			);
-			productName = amnesiaTests;
-			productReference = 66E6F5C52DD8351F00CC69B7 /* amnesiaTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		66E6F5CE2DD8351F00CC69B7 /* amnesiaUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 66E6F5DF2DD8351F00CC69B7 /* Build configuration list for PBXNativeTarget "amnesiaUITests" */;
-			buildPhases = (
-				66E6F5CB2DD8351F00CC69B7 /* Sources */,
-				66E6F5CC2DD8351F00CC69B7 /* Frameworks */,
-				66E6F5CD2DD8351F00CC69B7 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				66E6F5D12DD8351F00CC69B7 /* PBXTargetDependency */,
-			);
-			name = amnesiaUITests;
-			packageProductDependencies = (
-			);
-			productName = amnesiaUITests;
-			productReference = 66E6F5CF2DD8351F00CC69B7 /* amnesiaUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -172,14 +125,6 @@
 				TargetAttributes = {
 					66E6F5B42DD8351D00CC69B7 = {
 						CreatedOnToolsVersion = 16.3;
-					};
-					66E6F5C42DD8351F00CC69B7 = {
-						CreatedOnToolsVersion = 16.3;
-						TestTargetID = 66E6F5B42DD8351D00CC69B7;
-					};
-					66E6F5CE2DD8351F00CC69B7 = {
-						CreatedOnToolsVersion = 16.3;
-						TestTargetID = 66E6F5B42DD8351D00CC69B7;
 					};
 				};
 			};
@@ -202,28 +147,12 @@
 			projectRoot = "";
 			targets = (
 				66E6F5B42DD8351D00CC69B7 /* amnesia */,
-				66E6F5C42DD8351F00CC69B7 /* amnesiaTests */,
-				66E6F5CE2DD8351F00CC69B7 /* amnesiaUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		66E6F5B32DD8351D00CC69B7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		66E6F5C32DD8351F00CC69B7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		66E6F5CD2DD8351F00CC69B7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -240,34 +169,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		66E6F5C12DD8351F00CC69B7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		66E6F5CB2DD8351F00CC69B7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		66E6F5C72DD8351F00CC69B7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 66E6F5B42DD8351D00CC69B7 /* amnesia */;
-			targetProxy = 66E6F5C62DD8351F00CC69B7 /* PBXContainerItemProxy */;
-		};
-		66E6F5D12DD8351F00CC69B7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 66E6F5B42DD8351D00CC69B7 /* amnesia */;
-			targetProxy = 66E6F5D02DD8351F00CC69B7 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		66E6F5D72DD8351F00CC69B7 /* Debug */ = {
@@ -444,70 +346,6 @@
 			};
 			name = Release;
 		};
-		66E6F5DD2DD8351F00CC69B7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = harshsbajwa.amnesiaTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/amnesia.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/amnesia";
-			};
-			name = Debug;
-		};
-		66E6F5DE2DD8351F00CC69B7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = harshsbajwa.amnesiaTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/amnesia.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/amnesia";
-			};
-			name = Release;
-		};
-		66E6F5E02DD8351F00CC69B7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = harshsbajwa.amnesiaUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = amnesia;
-			};
-			name = Debug;
-		};
-		66E6F5E12DD8351F00CC69B7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = harshsbajwa.amnesiaUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = amnesia;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -525,24 +363,6 @@
 			buildConfigurations = (
 				66E6F5DA2DD8351F00CC69B7 /* Debug */,
 				66E6F5DB2DD8351F00CC69B7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		66E6F5DC2DD8351F00CC69B7 /* Build configuration list for PBXNativeTarget "amnesiaTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				66E6F5DD2DD8351F00CC69B7 /* Debug */,
-				66E6F5DE2DD8351F00CC69B7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		66E6F5DF2DD8351F00CC69B7 /* Build configuration list for PBXNativeTarget "amnesiaUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				66E6F5E02DD8351F00CC69B7 /* Debug */,
-				66E6F5E12DD8351F00CC69B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

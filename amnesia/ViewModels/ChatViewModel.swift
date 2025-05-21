@@ -6,119 +6,204 @@
 import Foundation
 import MLXLMCommon
 import UniformTypeIdentifiers
+import Combine
 
-/// ViewModel that manages the chat interface and coordinates with MLXService for text generation.
-/// Handles user input, message history, media attachments, and generation state.
 @Observable
 @MainActor
 class ChatViewModel {
-    /// Service responsible for ML model operations
     private let mlxService: MLXService
+    private let dataStorageService: DataStorageService
 
-    init(mlxService: MLXService) {
-        self.mlxService = mlxService
-    }
-
-    /// Current user input text
     var prompt: String = ""
-
-    /// Chat history containing system, user, and assistant messages
-    var messages: [Message] = [
-        .system("You are a helpful assistant!")
-    ]
-
-    /// Currently selected language model for generation
+    var messages: [Message] = []
     var selectedModel: LMModel = MLXService.availableModels.first!
-
-    /// Manages image and video attachments for the current message
     var mediaSelection = MediaSelection()
-
-    /// Indicates if text generation is in progress
     var isGenerating = false
-
-    /// Current generation task, used for cancellation
     private var generateTask: Task<Void, any Error>?
-
-    /// Stores performance metrics from the current generation
     private var generateCompletionInfo: GenerateCompletionInfo?
 
-    /// Current generation speed in tokens per second
+    var currentModelInstruction: String
+
     var tokensPerSecond: Double {
         generateCompletionInfo?.tokensPerSecond ?? 0
     }
 
-    /// Progress of the current model download, if any
     var modelDownloadProgress: Progress? {
         mlxService.modelDownloadProgress
     }
 
-    /// Most recent error message, if any
     var errorMessage: String?
 
-    /// Generates response for the current prompt and media attachments
+    init(mlxService: MLXService, dataStorageService: DataStorageService) {
+        self.mlxService = mlxService
+        self.dataStorageService = dataStorageService
+
+        let defaultSystemPrompt = "You are a helpful assistant. Users will provide queries, and sometimes, preceding their query, a section of recent screen context will be provided for your awareness. Use this screen context to inform your response if it is relevant to the user's query. Do not explicitly state that you are using recalled context unless the user asks about memory or context. Focus on answering the user's query directly."
+
+        // 1. Initialize currentModelInstruction first, potentially with a default.
+        //    We can't access self.messages yet.
+        //    For now, let's assume messages is empty or we set a default.
+        //    If messages were loaded from persistence *before* this init, that's a different pattern.
+        //    Given the current structure, we'll set a default for currentModelInstruction
+        //    and then adjust `messages` based on it.
+
+        // Check if `messages` (which is already initialized to []) contains a system message.
+        // This part is tricky because `messages` might be populated by a persistence layer
+        // *outside* this init, or it might just be its default empty array.
+        // For robustness, let's try to find it, but have a fallback.
+        
+        var _: String?
+        // Since `messages` could be modified by other parts (e.g. loading from disk)
+        // it's better to initialize `currentModelInstruction` without relying on `self.messages`
+        // and then reconcile `self.messages` *after* all stored properties are set.
+
+        // Initialize all stored properties first
+        self.currentModelInstruction = defaultSystemPrompt // Initialize with default
+
+        // Now that all stored properties are initialized, we can safely use `self`
+        if let existingSystemMessage = self.messages.first(where: { $0.role == .system }) {
+            // If messages somehow already had a system message (e.g. loaded externally before init), use it.
+            self.currentModelInstruction = existingSystemMessage.content
+        } else {
+            // Otherwise, ensure the messages array starts with the currentModelInstruction (which is defaultSystemPrompt here)
+            if self.messages.isEmpty {
+                self.messages.append(.system(self.currentModelInstruction))
+            } else {
+                // If messages exist but no system prompt, remove any other system prompts and add ours at the start.
+                self.messages.removeAll { $0.role == .system }
+                self.messages.insert(.system(self.currentModelInstruction), at: 0)
+            }
+        }
+    }
+
+    private func buildContextPreamble() async -> String {
+        let recentEvents = await dataStorageService.fetchRecentEvents(limit: 5)
+
+        guard !recentEvents.isEmpty else { return "" }
+
+        var contextText = ""
+        for event in recentEvents.reversed() { // Reversed to show oldest first in context block
+            let appName = event.applicationName ?? "Unknown App"
+            let ocr = event.ocrText?.trimmingCharacters(in: .whitespacesAndNewlines).prefix(200) ?? "No text captured"
+            let eventTime = event.timestamp?.formatted(date: .omitted, time: .shortened) ?? "Unknown time"
+            contextText += "[\(eventTime) - \(appName)]: \(ocr)\n...\n"
+        }
+        return contextText
+    }
+
     func generate() async {
-        // Cancel any existing generation task
         if let existingTask = generateTask {
             existingTask.cancel()
             generateTask = nil
         }
 
         isGenerating = true
+        errorMessage = nil
 
-        // Add user message with any media attachments
-        messages.append(.user(prompt, images: mediaSelection.images, videos: mediaSelection.videos))
-        // Add empty assistant message that will be filled during generation
+        let userTypedPrompt = self.prompt
+        let mediaForUserMessage = mediaSelection
+
+
+        messages.append(.user(userTypedPrompt, images: mediaForUserMessage.images, videos: mediaForUserMessage.videos))
+
+
+        clear(.prompt) // Clear input field and media selection
+
+        var messagesForLLM: [Message] = []
+
+        // 1. Add the current system instruction
+        messagesForLLM.append(.system(self.currentModelInstruction))
+
+        // 2. Add relevant history
+        if messages.count > 2 {
+            let history = messages.dropFirst().dropLast()
+            messagesForLLM.append(contentsOf: history)
+        }
+
+        // 3. Construct and add the final user message with context
+        let contextPreamble = await buildContextPreamble()
+        var finalUserPromptContent = ""
+
+        if !contextPreamble.isEmpty {
+            finalUserPromptContent += "Relevant Screen Context (for your awareness, most recent is last):\n---\n"
+            finalUserPromptContent += contextPreamble
+            finalUserPromptContent += "---\nUser Query:\n"
+        }
+        finalUserPromptContent += userTypedPrompt
+
+        messagesForLLM.append(.user(finalUserPromptContent, images: mediaForUserMessage.images, videos: mediaForUserMessage.videos))
+
+
+        // Prepare for assistant's response in UI
+        let assistantMessageIndexInUI = messages.count
         messages.append(.assistant(""))
 
-        // Clear the input after sending
-        clear(.prompt)
 
         generateTask = Task {
-            // Process generation chunks and update UI
-            for await generation in try await mlxService.generate(
-                messages: messages, model: selectedModel)
-            {
-                switch generation {
-                case .chunk(let chunk):
-                    // Append new text to the current assistant message
-                    if let assistantMessage = messages.last {
-                        assistantMessage.content += chunk
+            var accumulatedResponse = ""
+            var finalInfo: GenerateCompletionInfo?
+
+            do {
+                for await generation in try await mlxService.generate(
+                    messages: messagesForLLM,
+                    model: selectedModel)
+                {
+                    switch generation {
+                    case .chunk(let chunk):
+                        accumulatedResponse += chunk
+                        if messages.indices.contains(assistantMessageIndexInUI) {
+                            messages[assistantMessageIndexInUI].content = accumulatedResponse
+                        }
+                    case .info(let info):
+                        finalInfo = info
                     }
-                case .info(let info):
-                    // Update performance metrics
-                    generateCompletionInfo = info
                 }
+                if let finalInfo = finalInfo {
+                    generateCompletionInfo = finalInfo
+                }
+
+            } catch {
+                 Task { @MainActor in
+                    self.errorMessage = error.localizedDescription
+                    if messages.indices.contains(assistantMessageIndexInUI) {
+                        if messages[assistantMessageIndexInUI].content.isEmpty {
+                            messages[assistantMessageIndexInUI].content = "[Error: \(error.localizedDescription)]"
+                        } else {
+                            messages[assistantMessageIndexInUI].content += "\n[Error: \(error.localizedDescription)]"
+                        }
+                    } else {
+                         self.messages.append(.assistant("[Error: \(error.localizedDescription)]"))
+                    }
+                 }
             }
         }
 
         do {
-            // Handle task completion and cancellation
             try await withTaskCancellationHandler {
                 try await generateTask?.value
             } onCancel: {
                 Task { @MainActor in
                     generateTask?.cancel()
-
-                    // Mark message as cancelled
-                    if let assistantMessage = messages.last {
-                        assistantMessage.content += "\n[Cancelled]"
+                    if self.messages.indices.contains(assistantMessageIndexInUI) {
+                         if self.messages[assistantMessageIndexInUI].content.isEmpty {
+                            self.messages[assistantMessageIndexInUI].content = "[Cancelled]"
+                         } else if !self.messages[assistantMessageIndexInUI].content.contains("[Cancelled]") {
+                            self.messages[assistantMessageIndexInUI].content += "\n[Cancelled]"
+                         }
                     }
                 }
             }
         } catch {
-            errorMessage = error.localizedDescription
+            // Error is handled inside the Task
         }
 
         isGenerating = false
         generateTask = nil
     }
 
-    /// Processes and adds media attachments to the current message
     func addMedia(_ result: Result<URL, any Error>) {
         do {
             let url = try result.get()
-
-            // Determine media type and add to appropriate collection
             if let mediaType = UTType(filenameExtension: url.pathExtension) {
                 if mediaType.conforms(to: .image) {
                     mediaSelection.images = [url]
@@ -131,7 +216,6 @@ class ChatViewModel {
         }
     }
 
-    /// Clears various aspects of the chat state based on provided options
     func clear(_ options: ClearOption) {
         if options.contains(.prompt) {
             prompt = ""
@@ -139,44 +223,35 @@ class ChatViewModel {
         }
 
         if options.contains(.chat) {
-            messages = []
+            messages = [.system(self.currentModelInstruction)]
             generateTask?.cancel()
         }
 
         if options.contains(.meta) {
             generateCompletionInfo = nil
         }
-
         errorMessage = nil
     }
 }
 
-/// Manages the state of media attachments in the chat
+
 @Observable
 class MediaSelection {
-    /// Controls visibility of media selection UI
     var isShowing = false
-
-    /// Currently selected image URLs
     var images: [URL] = []
-
-    /// Currently selected video URLs
     var videos: [URL] = []
-
-    /// Whether any media is currently selected
     var isEmpty: Bool {
         images.isEmpty && videos.isEmpty
     }
 }
 
-/// Options for clearing different aspects of the chat state
+
 struct ClearOption: RawRepresentable, OptionSet {
     let rawValue: Int
 
-    /// Clears current prompt and media selection
     static let prompt = ClearOption(rawValue: 1 << 0)
-    /// Clears chat history and cancels generation
     static let chat = ClearOption(rawValue: 1 << 1)
-    /// Clears generation metadata
     static let meta = ClearOption(rawValue: 1 << 2)
+
+    static let allChatData: ClearOption = [.prompt, .chat, .meta]
 }

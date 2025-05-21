@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788" systemVersion="24E247" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="CaptureEvent" representedClassName="CaptureEvent" syncable="YES" codeGenerationType="class">
+        <attribute name="applicationName" optional="YES" attributeType="String"/>
+        <attribute name="bundleIdentifier" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
+        <attribute name="ocrText" optional="YES" attributeType="String"/>
+        <attribute name="screenshotPath" optional="YES" attributeType="String"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO" spotlightIndexingEnabled="YES"/>
+    </entity>
+</model>
